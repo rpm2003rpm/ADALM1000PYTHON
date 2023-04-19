@@ -1,2 +1,2 @@
 # ADALM1000PYTHON
-Collection of python programs written for the ADALM1000 board
+Collection of serveral python programs that I wrote for the ADALM1000 board.
