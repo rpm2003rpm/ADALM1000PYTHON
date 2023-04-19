@@ -77,7 +77,7 @@ class communicationPanel(ttk.Panedwindow):
             self.session.start(0)
         time.sleep(0.2)
         #Loop start
-        ADsignal1 = self.devx.read(4000, -1, True)
+        ADsignal1 = self.devx.read(500, -1, True)
         while vgs <= vgs_stop:
             vgs_list.append(vgs)
             self.devx.channels['A'].constant(vgs)
@@ -88,10 +88,10 @@ class communicationPanel(ttk.Panedwindow):
                     vds_list.append(vds)
                 print('Working on vgs = ' + str(vgs) + ' and vds = ' + str(vds))
                 self.devx.channels['B'].constant(vds)
-                time.sleep(0.1)
+                time.sleep(0.2)
                 #get_samples returns a list of [sample][channel][v/i] for voltage [0] and current [1]
-                ADsignal1 = self.devx.read(4000, -1, True) # get 400 readings [sample][cha/chb][v/i]
-                idlist.append(sum([(sample[1][1] + vds/20e3 + 2.5e-6) for sample in ADsignal1[3000:4000]])/1000)
+                ADsignal1 = self.devx.read(500, -1, True) # get 400 readings [sample][cha/chb][v/i]
+                idlist.append(sum([(sample[1][1] + vds/20e3) for sample in ADsignal1])/500)
                 vds = vds + vds_step
             ans.append(idlist)
             vgs = vgs + vgs_step
