@@ -114,14 +114,16 @@ class communicationPanel(ttk.Panedwindow):
     #---------------------------------------------------------------------------
     # Constructor
     #---------------------------------------------------------------------------
-    def __init__(self, parent, session):
+    def __init__(self, parent):
         #Call ttk.Panedwindow constructor
         ttk.Panedwindow.__init__(self, parent, orient=VERTICAL)
-        self.grid(column = 0, row = 0, sticky = (N, W))   
-        
-        self.session = session
-        self.devx = session.devices[0]
-        #self.devx = None
+        self.grid(column = 0, row = 0, sticky = (N, W)) 
+          
+        self.session = Session(ignore_dataflow=True, queue_size=10000)
+        if not self.session.devices:
+            print( 'no device found')
+            exit()
+        self.devx = self.session.devices[0]
         self.devx.channels['A'].mode = Mode.SVMI
         self.devx.channels['B'].mode = Mode.SVMI
         

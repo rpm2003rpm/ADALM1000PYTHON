@@ -38,7 +38,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showerror
 import communication
-from pysmu import *
+
 
 #-------------------------------------------------------------------------------
 # board user interface class
@@ -48,7 +48,7 @@ class boardui(Tk):
     #---------------------------------------------------------------------------
     # Constructor
     #---------------------------------------------------------------------------
-    def __init__(self, session):
+    def __init__(self):
         Tk.__init__(self)
         # a fix for running on OSX - to center the title text vertically
         if self.tk.call('tk', 'windowingsystem') == 'aqua':
@@ -63,7 +63,7 @@ class boardui(Tk):
 
 
         #Create panels
-        commPanel = communication.communicationPanel(self, session)
+        commPanel = communication.communicationPanel(self)
 
         #Add panels to the notebook
         #self.notebook.add(commPanel, text = "Mos")           
@@ -89,12 +89,8 @@ class boardui(Tk):
 #---------------------------------------------------------------------------
 # try to run the program and exit it if an error occur    
 #---------------------------------------------------------------------------
-session = Session(ignore_dataflow=True, queue_size=10000)
-if not session.devices:
-    print( 'no device found')
-    exit()
 try:
-    ui = boardui(session) 
+    ui = boardui() 
     ui.mainloop()
 except Exception as e:
     print('An error occurred: {}'.format(e))
