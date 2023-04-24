@@ -77,7 +77,7 @@ class communicationPanel(ttk.Panedwindow):
             self.session.start(0)
         time.sleep(0.2)
         #Loop start
-        ADsignal1 = self.devx.read(500, -1, True)
+        ADsignal1 = self.devx.read(250000, -1, True)
         while vgs <= vgs_stop:
             vgs_list.append(vgs)
             self.devx.channels['A'].constant(vgs)
@@ -88,11 +88,13 @@ class communicationPanel(ttk.Panedwindow):
                     vds_list.append(vds)
                 print('Working on vgs = ' + str(vgs) + ' and vds = ' + str(vds))
                 self.devx.channels['B'].constant(vds)
-                time.sleep(0.2)
+                time.sleep(1)
                 #get_samples returns a list of [sample][channel][v/i] for voltage [0] and current [1]
-                ADsignal1 = self.devx.read(500, -1, True) # get 400 readings [sample][cha/chb][v/i]
-                idlist.append(sum([(sample[1][1] + vds/20e3) for sample in ADsignal1])/500)
+                ADsignal1 = self.devx.read(250000, -1, True) # get 400 readings [sample][cha/chb][v/i]
+                idlist.append(sum([(sample[1][1] + vds/20e3 - 12.5e-6)  for sample in ADsignal1])/250000)
                 vds = vds + vds_step
+                #plt.hist([sample[1][1] for sample in ADsignal1], bins = 10)
+                #print(sum([sample[1][1] + vds/20e3  for sample in ADsignal1])/500)
             ans.append(idlist)
             vgs = vgs + vgs_step
             first = False
@@ -119,7 +121,7 @@ class communicationPanel(ttk.Panedwindow):
         ttk.Panedwindow.__init__(self, parent, orient=VERTICAL)
         self.grid(column = 0, row = 0, sticky = (N, W)) 
           
-        self.session = Session(ignore_dataflow=True, queue_size=10000)
+        self.session = Session(ignore_dataflow=True, queue_size=250000)
         if not self.session.devices:
             print( 'no device found')
             exit()
